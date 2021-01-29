@@ -1,12 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pick_paper/handlers/firestore_helper.dart';
+import 'package:pick_paper/models/shared_user.dart';
 import 'package:pick_paper/screens/create_request.dart';
 import 'package:pick_paper/widgets/request.dart';
+import 'package:provider/provider.dart';
 
-class RequestsPage extends StatelessWidget {
+class RequestsPage extends StatefulWidget {
+  @override
+  _RequestsPageState createState() => _RequestsPageState();
+}
+
+class _RequestsPageState extends State<RequestsPage>
+    with AutomaticKeepAliveClientMixin {
+  QueryDocumentSnapshot _user;
+
   @override
   Widget build(BuildContext context) {
+    this._user = Provider.of<SharedUser>(context).user;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -19,15 +30,21 @@ class RequestsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: Icon(Icons.person),
-            onPressed: () {},
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.black12,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: Icon(Icons.person),
+              onPressed: () {},
+            ),
           )
         ],
       ),
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirestoreHelper.getUsers(),
+        stream: FirestoreHelper.getUserRequests(this._user.id),
         builder: (context, snapshots) {
           if (snapshots.hasData) {
             return Container(
@@ -48,7 +65,7 @@ class RequestsPage extends StatelessWidget {
           }
           return Container(
             child: Center(
-              child: Text("We are having trouble connecting to the internet"),
+              child: Text("We are having trouble connecting to the internet."),
             ),
           );
         },
@@ -63,4 +80,8 @@ class RequestsPage extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

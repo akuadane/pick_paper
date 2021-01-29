@@ -14,6 +14,7 @@ class FirebaseAuthHelper {
     _authInstance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (AuthCredential credential) async {
+        print("Auto verification");
         UserCredential userCredential =
             await _authInstance.signInWithCredential(credential);
 
