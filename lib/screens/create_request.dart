@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pick_paper/handlers/firebase_storage_helper.dart';
+import 'package:pick_paper/handlers/firestore_helper.dart';
+import 'package:pick_paper/models/shared_user.dart';
 import 'package:pick_paper/screens/requests_page.dart';
+import 'package:provider/provider.dart';
 
 class CreateRequest extends StatefulWidget {
   @override
@@ -7,10 +15,13 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
-  int _paperMass = 0;
+  int _paperMass = 1;
+  QueryDocumentSnapshot _user;
+  File _image;
 
   @override
   Widget build(BuildContext context) {
+    this._user = Provider.of<SharedUser>(context).user;
     return Scaffold(
       appBar: AppBar(
         title: Text("REQUEST"),
@@ -75,7 +86,7 @@ class _CreateRequestState extends State<CreateRequest> {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(1000),
                                   onTap: () {
-                                    if (this._paperMass > 0) {
+                                    if (this._paperMass > 1) {
                                       setState(() {
                                         this._paperMass--;
                                       });
@@ -149,8 +160,6 @@ class _CreateRequestState extends State<CreateRequest> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Ink(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: Color(0XFFEEEEEE),
@@ -164,26 +173,36 @@ class _CreateRequestState extends State<CreateRequest> {
                                 ],
                               ),
                               child: InkWell(
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.photo,
-                                      size: 60,
-                                    ),
-                                    Text(
-                                      "Gallery",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                                onTap: () async {
+                                  File tempImage = await ImagePicker.pickImage(
+                                      source: ImageSource.gallery);
+
+                                  setState(() {
+                                    this._image = tempImage;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 20),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.photo,
+                                        size: 60,
                                       ),
-                                    )
-                                  ],
+                                      Text(
+                                        "Gallery",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                             Ink(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 20),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: Color(0XFFEEEEEE),
@@ -197,24 +216,48 @@ class _CreateRequestState extends State<CreateRequest> {
                                 ],
                               ),
                               child: InkWell(
-                                child: Column(
-                                  children: [
-                                    Icon(
-                                      Icons.camera_enhance_outlined,
-                                      size: 60,
-                                    ),
-                                    Text(
-                                      "Camera",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                                onTap: () async {
+                                  File tempImage = await ImagePicker.pickImage(
+                                      source: ImageSource.camera);
+
+                                  setState(() {
+                                    this._image = tempImage;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 20),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.camera_enhance_outlined,
+                                        size: 60,
                                       ),
-                                    )
-                                  ],
+                                      Text(
+                                        "Camera",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: this._image != null,
+                        child: Builder(
+                          builder: (context) {
+                            if (this._image != null)
+                              return ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.file(this._image));
+                            return Container();
+                          },
                         ),
                       ),
                     ],
@@ -351,35 +394,64 @@ class _CreateRequestState extends State<CreateRequest> {
                     ],
                   ),
                 ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(30),
-                  onTap: () {},
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: EdgeInsets.all(10),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          "SEND",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                Builder(
+                  builder: (context) => InkWell(
+                    borderRadius: BorderRadius.circular(30),
+                    onTap: () async {
+                      if (this._image != null) {
+                        showDialog(
+                          context: context,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                        String photoURL =
+                            await FirebaseStorageHelper.uploadPaperPhoto(
+                                this._image, this._user.id);
+
+                        if (photoURL.isNotEmpty) {
+                          await FirestoreHelper.createRequest(this._user.id,
+                              _paperMass, photoURL, GeoPoint(2.3, 43.1));
+                        }
+
+                        Navigator.pop(
+                            context); // removes the circular progress bar
+                        Navigator.pop(
+                            context); // goes back to the previous page
+                      } else {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text("Please choose an image"),
+                          duration: Duration(seconds: 2),
+                        ));
+                      }
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.all(10),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "SEND",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          colors: [
-                            Color(0XFF85FF40),
-                            Color(0XFF0CE69C),
-                          ],
-                          begin: const FractionalOffset(0.0, 1.0),
-                          end: const FractionalOffset(1.0, 0.0),
-                          stops: [0.0, 1.0],
-                          tileMode: TileMode.clamp),
-                      borderRadius: BorderRadius.circular(30),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [
+                              Color(0XFF85FF40),
+                              Color(0XFF0CE69C),
+                            ],
+                            begin: const FractionalOffset(0.0, 1.0),
+                            end: const FractionalOffset(1.0, 0.0),
+                            stops: [0.0, 1.0],
+                            tileMode: TileMode.clamp),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
                   ),
                 ),
