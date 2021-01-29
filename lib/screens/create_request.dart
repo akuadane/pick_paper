@@ -1,12 +1,16 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pick_paper/handlers/firebase_storage_helper.dart';
 import 'package:pick_paper/handlers/firestore_helper.dart';
 import 'package:pick_paper/models/shared_user.dart';
-import 'package:pick_paper/screens/requests_page.dart';
+
+import 'package:pick_paper/widgets/map.dart';
 import 'package:provider/provider.dart';
 
 class CreateRequest extends StatefulWidget {
@@ -253,9 +257,12 @@ class _CreateRequestState extends State<CreateRequest> {
                         child: Builder(
                           builder: (context) {
                             if (this._image != null)
-                              return ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.file(this._image));
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.file(this._image)),
+                              );
                             return Container();
                           },
                         ),
@@ -276,6 +283,14 @@ class _CreateRequestState extends State<CreateRequest> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
+                        ),
+                      ),
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Map(),
                         ),
                       ),
                       Padding(
