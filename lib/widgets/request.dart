@@ -209,13 +209,43 @@ class Request extends StatelessWidget {
                     )
                   ],
                 ),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: Image.network(
-                    "${this.request["photoURL"]}",
-                    width: 100,
-                  ),
-                )
+                Builder(builder: (context) {
+                  String photoURL = this.request["photoURL"];
+
+                  if (photoURL == "" || photoURL == null) {
+                    return Icon(
+                      Icons.image,
+                      size: 100,
+                    );
+                  } else {
+                    return InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          child: Center(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    child: Image.network(photoURL),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.network(
+                          "${this.request["photoURL"]}",
+                          scale: 15,
+                        ),
+                      ),
+                    );
+                  }
+                })
               ],
             ),
           ),

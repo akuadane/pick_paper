@@ -333,79 +333,79 @@ class _CreateRequestState extends State<CreateRequest> {
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(30),
-                                  onTap: () {},
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Text(
-                                          "Map",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Color(0XFFEEEEEE),
-                                      borderRadius: BorderRadius.circular(30),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                          spreadRadius: 1,
-                                          blurRadius: 2,
-                                          offset: Offset(4, 4),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Expanded(
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.all(10.0),
+                            //     child: InkWell(
+                            //       borderRadius: BorderRadius.circular(30),
+                            //       onTap: () {},
+                            //       child: Container(
+                            //         padding: EdgeInsets.all(10),
+                            //         child: Center(
+                            //           child: Padding(
+                            //             padding: const EdgeInsets.all(5.0),
+                            //             child: Text(
+                            //               "Map",
+                            //               style: TextStyle(
+                            //                 fontSize: 15,
+                            //                 fontWeight: FontWeight.bold,
+                            //               ),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //         decoration: BoxDecoration(
+                            //           color: Color(0XFFEEEEEE),
+                            //           borderRadius: BorderRadius.circular(30),
+                            //           boxShadow: [
+                            //             BoxShadow(
+                            //               color: Colors.grey.withOpacity(0.5),
+                            //               spreadRadius: 1,
+                            //               blurRadius: 2,
+                            //               offset: Offset(4, 4),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(30),
-                          onTap: () {},
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text(
-                                  "My current location",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              color: Color(0XFFEEEEEE),
-                              borderRadius: BorderRadius.circular(30),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(4, 4),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(10.0),
+                      //   child: InkWell(
+                      //     borderRadius: BorderRadius.circular(30),
+                      //     onTap: () {},
+                      //     child: Container(
+                      //       padding: EdgeInsets.all(10),
+                      //       child: Center(
+                      //         child: Padding(
+                      //           padding: const EdgeInsets.all(5.0),
+                      //           child: Text(
+                      //             "My current location",
+                      //             style: TextStyle(
+                      //               fontSize: 15,
+                      //               fontWeight: FontWeight.bold,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       decoration: BoxDecoration(
+                      //         color: Color(0XFFEEEEEE),
+                      //         borderRadius: BorderRadius.circular(30),
+                      //         boxShadow: [
+                      //           BoxShadow(
+                      //             color: Colors.grey.withOpacity(0.5),
+                      //             spreadRadius: 1,
+                      //             blurRadius: 2,
+                      //             offset: Offset(4, 4),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

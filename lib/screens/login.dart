@@ -78,6 +78,7 @@ class LogIn extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 15.0),
                     child: Builder(
                       builder: (BuildContext context) => InkWell(
+                        borderRadius: BorderRadius.circular(30),
                         onTap: () {
                           _submitForm(context);
                         },
