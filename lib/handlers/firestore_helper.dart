@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pick_paper/models/shared_location.dart';
+import 'package:provider/provider.dart';
+import 'package:pick_paper/models/shared_user.dart';
 
 class FirestoreHelper {
   static final _firestoreInstance = FirebaseFirestore.instance;
@@ -14,7 +17,7 @@ class FirestoreHelper {
       "badge": "",
       "paperRecycled": 0,
       "profilePictureURL": "",
-      "savedAddresses": [],
+      "savedAddresses": {},
       "totalRequestsMade": 0,
     });
   }
@@ -35,6 +38,10 @@ class FirestoreHelper {
         .collection("users")
         .where("uid", isEqualTo: uid)
         .snapshots();
+  }
+
+  static Stream<DocumentSnapshot> getCollectorStream(String docId) {
+    return _firestoreInstance.collection("collectors").doc(docId).snapshots();
   }
 
   static Future<void> updateProfilePicture(String userDocId, String photoURL) {
@@ -81,6 +88,23 @@ class FirestoreHelper {
   static Future<void> cancleRequest(String requestId) {
     _firestoreInstance.collection("recyclingRequests").doc(requestId).update({
       "status": 4,
+    });
+  }
+
+  static Future<void> addToSavedLocation(
+      SharedUser sharedUser, String name, SharedLocation location) async {
+    final user = sharedUser.user;
+    Map<String, dynamic> locationMap = user["savedAddresses"];
+    GeoPoint locationToBeSaved = location.location;
+    locationMap[name] = locationToBeSaved;
+
+    _firestoreInstance
+        .collection("users")
+        .doc(user.id)
+        .update({"savedAddresses": locationMap});
+
+    getUser(user.id).then((value) {
+      sharedUser.user = value.docs[0];
     });
   }
 

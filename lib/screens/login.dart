@@ -134,9 +134,9 @@ class LogIn extends StatelessWidget {
       formState.save();
       showDialog(
           context: context,
-          child: Center(
-            child: CircularProgressIndicator(),
-          ));
+          builder: (context) => Center(
+                child: CircularProgressIndicator(),
+              ));
 
       UserCredential userCredential =
           await FirebaseAuthHelper.signInWithPhone(this._phoneNumber, context);

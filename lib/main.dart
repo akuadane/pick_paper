@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => SharedUser(),
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Pick Paper',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           // This is the theme of your application.
           //

@@ -4,6 +4,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:pick_paper/handlers/firestore_helper.dart';
+import 'package:pick_paper/models/shared_location.dart';
+import 'package:pick_paper/models/shared_user.dart';
+import 'package:provider/provider.dart';
 
 class Map extends StatefulWidget {
   @override
@@ -15,20 +19,25 @@ class _MapState extends State<Map> {
   Location _location = new Location();
   List<Marker> _markers = [Marker()];
   Marker _currentLocationMarker;
-  GeoPoint _centerPosition;
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     double mapHeight = (MediaQuery.of(context).size.height * 0.5);
     double mapWidth = (MediaQuery.of(context).size.width);
     double iconSize = 50;
+    final _centerPosition = Provider.of<SharedLocation>(context);
+    final _user = Provider.of<SharedUser>(context);
     return Container(
       child: FutureBuilder<GeoPoint>(
         future: _getCurrentLocation(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             GeoPoint currentPosition = snapshot.data;
-            _centerPosition = currentPosition;
+
+            _centerPosition.location =
+                GeoPoint(currentPosition.latitude, currentPosition.longitude);
+
             return Stack(
               children: [
                 GoogleMap(
@@ -50,22 +59,72 @@ class _MapState extends State<Map> {
                   myLocationButtonEnabled: true,
                   myLocationEnabled: true,
                   onCameraMove: (CameraPosition position) {
-                    print("here");
+                    _centerPosition.location = GeoPoint(
+                        position.target.latitude, position.target.longitude);
                   },
                 ),
                 Positioned(
-                    top: mapHeight / 2 - iconSize,
-                    left: mapWidth / 2 - iconSize,
-                    child: PhysicalModel(
-                      elevation: 8,
-                      color: Colors.black26,
-                      shape: BoxShape.circle,
-                      child: Icon(
-                        Icons.location_pin,
-                        color: Colors.green,
-                        size: iconSize,
+                  top: mapHeight / 2 - iconSize,
+                  left: mapWidth / 2 - iconSize,
+                  child: Image.asset(
+                    "images/pickPaperMarker.png",
+                    scale: 2,
+                  ),
+                ),
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: Opacity(
+                    opacity: 0.9,
+                    child: Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          color: Colors.white70,
+                          borderRadius: BorderRadius.circular(2)),
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text("Save location"),
+                              content: TextFormField(
+                                controller: controller,
+                                decoration: InputDecoration(
+                                  hintText: "Name this location",
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    if (controller.text != null &&
+                                        controller.text != "") {
+                                      FirestoreHelper.addToSavedLocation(_user,
+                                          controller.text, _centerPosition);
+                                      controller.text = "";
+                                    }
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("Save"),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.black87,
+                          size: 25,
+                        ),
                       ),
-                    )),
+                    ),
+                  ),
+                ),
               ],
             );
           }

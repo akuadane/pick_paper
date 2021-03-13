@@ -131,9 +131,9 @@ class VerifyOtpPage extends StatelessWidget {
 
       showDialog(
           context: context,
-          child: Center(
-            child: CircularProgressIndicator(),
-          ));
+          builder: (context) => Center(
+                child: CircularProgressIndicator(),
+              ));
 
       UserCredential userCredential = await FirebaseAuthHelper.signInWithOtp(
           this.verificationId, this._otp, context);

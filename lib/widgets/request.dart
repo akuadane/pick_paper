@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pick_paper/handlers/firestore_helper.dart';
+import 'package:pick_paper/widgets/rating_stars.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class Request extends StatelessWidget {
@@ -44,8 +45,8 @@ class Request extends StatelessWidget {
 
     return Builder(builder: (context) {
       if (this.request["acceptedByCollector"] != null) {
-        return FutureBuilder<DocumentSnapshot>(
-          future: this.request["acceptedByCollector"].get(),
+        return StreamBuilder<DocumentSnapshot>(
+          stream: this.request["acceptedByCollector"].snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               collector = snapshot.data;
@@ -182,30 +183,22 @@ class Request extends StatelessWidget {
                     ),
                     Visibility(
                       visible: status == 2,
-                      child: SmoothStarRating(
-                        rating: this.request["rating"]["rating"].toDouble(),
-                        isReadOnly: false,
-                        size: 30,
-                        color: Colors.yellow,
-                        filledIconData: Icons.star,
-                        defaultIconData: Icons.star_border,
-                        starCount: 5,
-                        allowHalfRating: false,
-                        spacing: 2.0,
-                        onRated: (value) async {
-                          var rating = this.request["rating"];
-                          if (rating["rated"]) {
-                            await FirestoreHelper.changeRatingForCollector(
-                                collector,
-                                value,
-                                this.request.id,
-                                rating["rating"]);
-                          } else {
-                            await FirestoreHelper.rateCollectorForTheFirstTime(
-                                collector, value, this.request.id);
-                          }
-                        },
-                      ),
+                      child: RatingStars(
+                          rating: this.request["rating"]["rating"].toDouble(),
+                          onRated: (value) async {
+                            var rating = this.request["rating"];
+                            if (rating["rated"]) {
+                              await FirestoreHelper.changeRatingForCollector(
+                                  collector,
+                                  value,
+                                  this.request.id,
+                                  rating["rating"]);
+                            } else {
+                              await FirestoreHelper
+                                  .rateCollectorForTheFirstTime(
+                                      collector, value, this.request.id);
+                            }
+                          }),
                     )
                   ],
                 ),
@@ -222,7 +215,7 @@ class Request extends StatelessWidget {
                       onTap: () {
                         showDialog(
                           context: context,
-                          child: Center(
+                          builder: (context) => Center(
                             child: SingleChildScrollView(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -254,3 +247,28 @@ class Request extends StatelessWidget {
     );
   }
 }
+
+// SmoothStarRating(
+// rating: this.request["rating"]["rating"].toDouble(),
+// isReadOnly: false,
+// size: 30,
+// color: Colors.yellow,
+// filledIconData: Icons.star,
+// defaultIconData: Icons.star_border,
+// starCount: 5,
+// allowHalfRating: false,
+// spacing: 2.0,
+// onRated: (value) async {
+// var rating = this.request["rating"];
+// if (rating["rated"]) {
+// await FirestoreHelper.changeRatingForCollector(
+// collector,
+// value,
+// this.request.id,
+// rating["rating"]);
+// } else {
+// await FirestoreHelper.rateCollectorForTheFirstTime(
+// collector, value, this.request.id);
+// }
+// },
+// ),
