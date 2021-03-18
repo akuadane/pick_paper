@@ -19,9 +19,6 @@ class _NotificationsState extends State<Notifications>
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _firebaseMessaging.subscribeToTopic("test");
-
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print("On message, $message");

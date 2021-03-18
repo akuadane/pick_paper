@@ -92,11 +92,11 @@ class FirestoreHelper {
   }
 
   static Future<void> addToSavedLocation(
-      SharedUser sharedUser, String name, SharedLocation location) async {
+      SharedUser sharedUser, String name, GeoPoint location) async {
     final user = sharedUser.user;
+    print(location.longitude);
     Map<String, dynamic> locationMap = user["savedAddresses"];
-    GeoPoint locationToBeSaved = location.location;
-    locationMap[name] = locationToBeSaved;
+    locationMap[name] = location;
 
     _firestoreInstance
         .collection("users")

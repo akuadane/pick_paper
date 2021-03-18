@@ -30,15 +30,9 @@ class _RequestsPageState extends State<RequestsPage>
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.black12,
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(Icons.person),
-              onPressed: () {},
-            ),
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {},
           )
         ],
       ),

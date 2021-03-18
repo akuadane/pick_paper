@@ -104,8 +104,10 @@ class _MapState extends State<Map> {
                                   onPressed: () {
                                     if (controller.text != null &&
                                         controller.text != "") {
-                                      FirestoreHelper.addToSavedLocation(_user,
-                                          controller.text, _centerPosition);
+                                      FirestoreHelper.addToSavedLocation(
+                                          _user,
+                                          controller.text,
+                                          _centerPosition.location);
                                       controller.text = "";
                                     }
                                     Navigator.pop(context);
