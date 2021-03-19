@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:pick_paper/handlers/firebase_auth_helper.dart';
 import 'package:pick_paper/handlers/firestore_helper.dart';
 import 'package:pick_paper/models/shared_user.dart';
+import 'package:pick_paper/screens/otp.dart';
 import 'package:provider/provider.dart';
 
 import 'home.dart';
@@ -66,6 +67,10 @@ class LogIn extends StatelessWidget {
                           hintText: "PHONE",
                           prefixIcon: Icon(
                             Icons.phone,
+                          ),
+                          prefix: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text("+251"),
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
@@ -132,31 +137,38 @@ class LogIn extends StatelessWidget {
 
     if (formState.validate()) {
       formState.save();
-      showDialog(
-          context: context,
-          builder: (context) => Center(
-                child: CircularProgressIndicator(),
-              ));
 
-      UserCredential userCredential =
-          await FirebaseAuthHelper.signInWithPhone(this._phoneNumber, context);
-
-      if (userCredential != null) {
-        QuerySnapshot user =
-            await FirestoreHelper.getUser(userCredential.user.uid);
-
-        if (user.size == 0) {
-          // creates a new account with the phone number if there is account registered to the phone number
-          await FirestoreHelper.createUser(
-              this._phoneNumber, userCredential.user.uid);
-        }
-
-        Navigator.pop(context);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => Home(userCredential.user.uid)));
-      }
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OTP(
+                    phoneNumber: "+1" + _phoneNumber,
+                  )));
+      // showDialog(
+      //     context: context,
+      //     builder: (context) => Center(
+      //           child: CircularProgressIndicator(),
+      //         ));
+      //
+      // UserCredential userCredential =
+      //     await FirebaseAuthHelper.signInWithPhone(this._phoneNumber, context);
+      //
+      // if (userCredential != null) {
+      //   QuerySnapshot user =
+      //       await FirestoreHelper.getUser(userCredential.user.uid);
+      //
+      //   if (user.size == 0) {
+      //     // creates a new account with the phone number if there is no account registered to the phone number
+      //     await FirestoreHelper.createUser(
+      //         this._phoneNumber, userCredential.user.uid);
+      //   }
+      //
+      //   Navigator.pop(context);
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (context) => Home(userCredential.user.uid)));
+      // }
     }
   }
 }

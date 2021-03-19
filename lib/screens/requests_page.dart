@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pick_paper/handlers/firestore_helper.dart';
 import 'package:pick_paper/models/shared_user.dart';
 import 'package:pick_paper/screens/create_request.dart';
+import 'package:pick_paper/screens/profile.dart';
 import 'package:pick_paper/widgets/request.dart';
 import 'package:provider/provider.dart';
 
@@ -29,10 +30,14 @@ class _RequestsPageState extends State<RequestsPage>
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: Container(),
         actions: [
           IconButton(
             icon: Icon(Icons.person),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Profile()));
+            },
           )
         ],
       ),
