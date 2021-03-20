@@ -55,14 +55,23 @@ class _NotificationsState extends State<Notifications>
         backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
-      body: ListView.builder(
-          itemCount: messages.length,
-          itemBuilder: (context, index) => Card(
-                child: ListTile(
-                  title: Text(messages[index].title),
-                  subtitle: Text(messages[index].body),
-                ),
-              )),
+      body: Builder(
+        builder: (context) {
+          if (messages.length != 0) {
+            ListView.builder(
+                itemCount: messages.length,
+                itemBuilder: (context, index) => Card(
+                      child: ListTile(
+                        title: Text(messages[index].title),
+                        subtitle: Text(messages[index].body),
+                      ),
+                    ));
+          }
+          return Center(
+            child: Text("No notifications so far."),
+          );
+        },
+      ),
     );
   }
 
