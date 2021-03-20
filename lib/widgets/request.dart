@@ -54,8 +54,17 @@ class Request extends StatelessWidget {
                   mass, status, dateOfRequestStr, dateOfPickupStr, collector);
             }
             return Container(
-              child: Center(
-                child: CircularProgressIndicator(),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 3,
+                    offset: Offset(4, 4), // changes position of shadow
+                  ),
+                ],
               ),
             );
           },
@@ -221,7 +230,9 @@ class Request extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Container(
-                                    child: Image.network(photoURL),
+                                    child: Image.network(
+                                      photoURL,
+                                    ),
                                   ),
                                 ],
                               ),

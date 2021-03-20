@@ -142,7 +142,7 @@ class LogIn extends StatelessWidget {
           context,
           MaterialPageRoute(
               builder: (context) => OTP(
-                    phoneNumber: "+1" + _phoneNumber,
+                    phoneNumber: "+251" + _phoneNumber,
                   )));
       // showDialog(
       //     context: context,

@@ -50,7 +50,7 @@ class _CreateRequestState extends State<CreateRequest> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "REQUEST",
+          "CREATE REQUEST",
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -68,6 +68,7 @@ class _CreateRequestState extends State<CreateRequest> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -305,7 +306,7 @@ class _CreateRequestState extends State<CreateRequest> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Choose Pick-Up Location",
+                        "Choose Pick-Up Location On Map",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
@@ -320,72 +321,76 @@ class _CreateRequestState extends State<CreateRequest> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: DropdownButton<SavedLocation>(
-                                  value: dropdownValue,
-                                  icon: const Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  onChanged: (SavedLocation newValue) {
-                                    setState(() {
-                                      dropdownValue = newValue;
-                                      _goto(newValue.location);
-                                    });
-                                  },
-                                  items: listOfSavedLocations
-                                      .map<DropdownMenuItem<SavedLocation>>(
-                                          (SavedLocation value) {
-                                    return DropdownMenuItem<SavedLocation>(
-                                      value: value,
-                                      child: Text(value.toString()),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                            // Expanded(
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.all(10.0),
-                            //     child: InkWell(
-                            //       borderRadius: BorderRadius.circular(30),
-                            //       onTap: () {},
-                            //       child: Container(
-                            //         padding: EdgeInsets.all(10),
-                            //         child: Center(
-                            //           child: Padding(
-                            //             padding: const EdgeInsets.all(5.0),
-                            //             child: Text(
-                            //               "Map",
-                            //               style: TextStyle(
-                            //                 fontSize: 15,
-                            //                 fontWeight: FontWeight.bold,
-                            //               ),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //         decoration: BoxDecoration(
-                            //           color: Color(0XFFEEEEEE),
-                            //           borderRadius: BorderRadius.circular(30),
-                            //           boxShadow: [
-                            //             BoxShadow(
-                            //               color: Colors.grey.withOpacity(0.5),
-                            //               spreadRadius: 1,
-                            //               blurRadius: 2,
-                            //               offset: Offset(4, 4),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
-                          ],
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(
+                          "Or Choose From Saved Locations",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: DropdownButton<SavedLocation>(
+                            value: dropdownValue,
+                            icon: const Icon(Icons.arrow_drop_down),
+                            iconSize: 24,
+                            elevation: 16,
+                            onChanged: (SavedLocation newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                                _goto(newValue.location);
+                              });
+                            },
+                            items: listOfSavedLocations
+                                .map<DropdownMenuItem<SavedLocation>>(
+                                    (SavedLocation value) {
+                              return DropdownMenuItem<SavedLocation>(
+                                value: value,
+                                child: Text(value.toString()),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                        // Expanded(
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(10.0),
+                        //     child: InkWell(
+                        //       borderRadius: BorderRadius.circular(30),
+                        //       onTap: () {},
+                        //       child: Container(
+                        //         padding: EdgeInsets.all(10),
+                        //         child: Center(
+                        //           child: Padding(
+                        //             padding: const EdgeInsets.all(5.0),
+                        //             child: Text(
+                        //               "Map",
+                        //               style: TextStyle(
+                        //                 fontSize: 15,
+                        //                 fontWeight: FontWeight.bold,
+                        //               ),
+                        //             ),
+                        //           ),
+                        //         ),
+                        //         decoration: BoxDecoration(
+                        //           color: Color(0XFFEEEEEE),
+                        //           borderRadius: BorderRadius.circular(30),
+                        //           boxShadow: [
+                        //             BoxShadow(
+                        //               color: Colors.grey.withOpacity(0.5),
+                        //               spreadRadius: 1,
+                        //               blurRadius: 2,
+                        //               offset: Offset(4, 4),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ),
                       // Padding(
                       //   padding: const EdgeInsets.all(10.0),
@@ -440,8 +445,6 @@ class _CreateRequestState extends State<CreateRequest> {
                                 this._image, this._user.id);
 
                         if (photoURL.isNotEmpty) {
-                          print(
-                              "${_centerPosition.longitude}===============================");
                           await FirestoreHelper.createRequest(this._user.id,
                               _paperMass, photoURL, _centerPosition);
                         }
@@ -572,7 +575,6 @@ class _CreateRequestState extends State<CreateRequest> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    print(_centerPosition);
                                     if (controller.text != null &&
                                         controller.text != "") {
                                       FirestoreHelper.addToSavedLocation(_user,

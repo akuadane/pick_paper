@@ -46,16 +46,29 @@ class _RequestsPageState extends State<RequestsPage>
         stream: FirestoreHelper.getUserRequests(this._user.id),
         builder: (context, snapshots) {
           if (snapshots.hasData) {
-            return Container(
-              child: ListView.builder(
-                  itemCount: snapshots.data.docs.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25, vertical: 15),
-                      child: Request(snapshots.data.docs[index]),
-                    );
-                  }),
+            if (snapshots.data.docs.length != 0) {
+              return Container(
+                child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: snapshots.data.docs.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 25, vertical: 15),
+                        child: Request(snapshots.data.docs[index]),
+                      );
+                    }),
+              );
+            }
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("You have created zero requests so far."),
+                  Text(
+                      "To create a request press + on the bottom-right corner.")
+                ],
+              ),
             );
           } else if (snapshots.connectionState == ConnectionState.waiting) {
             return Center(

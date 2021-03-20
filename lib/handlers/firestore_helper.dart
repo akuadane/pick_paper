@@ -14,7 +14,7 @@ class FirestoreHelper {
       "name": "An environment savvy",
       "dateOfSignUp": Timestamp.now(),
       "uid": uid,
-      "badge": "",
+      "badge": "Beginner",
       "paperRecycled": 0,
       "profilePictureURL": "",
       "savedAddresses": {},
@@ -44,11 +44,16 @@ class FirestoreHelper {
     return _firestoreInstance.collection("collectors").doc(docId).snapshots();
   }
 
-  static Future<void> updateProfilePicture(String userDocId, String photoURL) {
+  static Future<void> updateProfilePicture(
+      String userDocId, String photoURL, SharedUser sharedUser) {
     _firestoreInstance
         .collection("users")
         .doc(userDocId)
         .update({"profilePictureURL": photoURL});
+
+    getUser(userDocId).then((value) {
+      sharedUser.user = value.docs[0];
+    });
   }
 
   static Future<void> updateUserName(String userDocId, String newName) {
