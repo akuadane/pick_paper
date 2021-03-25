@@ -22,10 +22,6 @@ class FirestoreHelper {
     });
   }
 
-  static Stream<QuerySnapshot> getUsers() {
-    return _firestoreInstance.collection("users").snapshots();
-  }
-
   static Future<QuerySnapshot> getUser(String uid) {
     return _firestoreInstance
         .collection("users")

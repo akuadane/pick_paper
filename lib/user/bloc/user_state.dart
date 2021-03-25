@@ -8,6 +8,8 @@ class SignedIn extends UserState {
   SignedIn(this.user);
 }
 
-class SignOut extends UserState {}
+class SigningIn extends UserState {}
+
+class SignedOut extends UserState {}
 
 class SignInError extends UserState {}
