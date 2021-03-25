@@ -63,9 +63,15 @@ class FirestoreHelper {
         .update({"name": newName});
   }
 
-  static Future<void> createRequest(
-      String userDocId, int mass, String photoURL, GeoPoint pickUpSpot) {
-    _firestoreInstance.collection("recyclingRequests").add({
+  static Future<DocumentReference> createRequest(QueryDocumentSnapshot user,
+      int mass, String photoURL, GeoPoint pickUpSpot) {
+    String userDocId = user.id;
+
+    _firestoreInstance.collection("users").doc(userDocId).update(
+      {"totalRequestsMade": user["totalRequestsMade"] + 1},
+    );
+
+    return _firestoreInstance.collection("recyclingRequests").add({
       "dateOfRequest": Timestamp.now(),
       "dateOfAcceptance": null,
       "mass": mass,

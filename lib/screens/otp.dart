@@ -203,7 +203,9 @@ class _OTPState extends State<OTP> {
         }
       },
       verificationFailed: (FirebaseAuthException exception) {
-        print(exception.message);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("SMS verification failed."),
+        ));
       },
       codeSent: (String verificationId, int resendToken) {
         setState(() {

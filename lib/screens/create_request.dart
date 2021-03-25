@@ -445,10 +445,13 @@ class _CreateRequestState extends State<CreateRequest> {
                                 this._image, this._user.id);
 
                         if (photoURL.isNotEmpty) {
-                          await FirestoreHelper.createRequest(this._user.id,
-                              _paperMass, photoURL, _centerPosition);
+                          DocumentReference docRef =
+                              await FirestoreHelper.createRequest(this._user,
+                                  _paperMass, photoURL, _centerPosition);
+
+                          FirebaseMessaging()
+                              .subscribeToTopic("${docRef.id}_request");
                         }
-                        FirebaseMessaging().subscribeToTopic("test");
 
                         Navigator.pop(
                             context); // removes the circular progress bar

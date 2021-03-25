@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pick_paper/handlers/cloud_messaging_service.dart';
 import 'package:pick_paper/handlers/firestore_helper.dart';
 import 'package:pick_paper/widgets/rating_stars.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -54,6 +55,7 @@ class Request extends StatelessWidget {
                   mass, status, dateOfRequestStr, dateOfPickupStr, collector);
             }
             return Container(
+              height: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
@@ -142,18 +144,61 @@ class Request extends StatelessWidget {
                         ),
                       );
                     else if (status == 1) {
-                      return Text(
-                        "Accepted by ${collector["name"]}",
-                        style: TextStyle(
-                          color: Colors.green,
+                      return Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Accepted by ",
+                              style: TextStyle(
+                                color: Colors.green,
+                              ),
+                            ),
+                            Text(
+                              "${collector["name"]}",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                String bodyOfNotification =
+                                    "Dear Collector,\nPlease be reminded of the request I made on $dateOfRequestStr.";
+                                MessagingService.sendToTopic(
+                                    title: "Reminding about my request",
+                                    body: bodyOfNotification,
+                                    topic: "${this.request.id}_request");
+                              },
+                              icon: Icon(
+                                Icons.bolt,
+                                color: Colors.orange,
+                                size: 30,
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     } else if (status == 2)
-                      return Text(
-                        "Picked up by ${collector["name"]}",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.green,
+                      return Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Picked up by ",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.green,
+                              ),
+                            ),
+                            Text(
+                              "${collector["name"]}",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       );
 
@@ -217,6 +262,7 @@ class Request extends StatelessWidget {
                   if (photoURL == "" || photoURL == null) {
                     return Icon(
                       Icons.image,
+                      color: Colors.grey,
                       size: 100,
                     );
                   } else {
@@ -232,6 +278,7 @@ class Request extends StatelessWidget {
                                   Container(
                                     child: Image.network(
                                       photoURL,
+                                      height: 150,
                                     ),
                                   ),
                                 ],

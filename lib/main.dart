@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pick_paper/models/shared_user.dart';
 import 'package:pick_paper/screens/index.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,10 @@ class MyApp extends StatelessWidget {
             800: Color.fromRGBO(12, 230, 156, .9),
             900: Color.fromRGBO(12, 230, 156, 1),
           }),
-        ),
+        ).copyWith(
+            textTheme: GoogleFonts.rubikTextTheme(
+          Theme.of(context).textTheme,
+        )),
         home: Index(),
       ),
     );

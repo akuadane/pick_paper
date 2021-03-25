@@ -17,6 +17,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final _formKey = GlobalKey<FormState>();
+  final badges = ["Beginner", "Intermediate", "Expert"];
   String name, badge, phoneNumber;
   int paperRecycled;
   bool profilePicExists = false;
@@ -26,13 +27,23 @@ class _ProfileState extends State<Profile> {
     SharedUser sharedUser = Provider.of<SharedUser>(context);
     final QueryDocumentSnapshot user = sharedUser.user;
     name = user["name"];
-    badge = user["badge"];
+
     phoneNumber = user["phone"];
     paperRecycled = user["paperRecycled"];
+
     profilePicExists =
         (user["profilePictureURL"] == "" || user["profilePictureURL"] == null)
             ? false
             : true;
+
+    int tempBadgeIndex = (paperRecycled / 5).round();
+
+    if (tempBadgeIndex > badges.length - 1) {
+      tempBadgeIndex = badges.length - 1;
+    }
+
+    badge = badges[tempBadgeIndex];
+
     return Scaffold(
       appBar: AppBar(
         title: Text(

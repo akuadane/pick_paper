@@ -21,17 +21,22 @@ class _NotificationsState extends State<Notifications>
     super.initState();
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
-        print("On message, $message");
         final notification = message["notification"];
         setState(() {
           messages.add(Message(notification['title'], notification['body']));
         });
       },
       onResume: (Map<String, dynamic> message) {
-        print("On message, $message");
+        final notification = message["notification"];
+        setState(() {
+          messages.add(Message(notification['title'], notification['body']));
+        });
       },
       onLaunch: (Map<String, dynamic> message) {
-        print("On message, $message");
+        final notification = message["notification"];
+        setState(() {
+          messages.add(Message(notification['title'], notification['body']));
+        });
       },
     );
     _firebaseMessaging.requestNotificationPermissions(
