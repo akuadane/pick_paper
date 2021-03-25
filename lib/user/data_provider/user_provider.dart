@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class UserProvider {
   static final _firestoreInstance = FirebaseFirestore.instance;
   static final _firebaseStorageInstance = FirebaseStorage.instance;
+  static final _authInstance = FirebaseAuth.instance;
 
   Future<void> createUser(String phoneNumber, String uid) {
     _firestoreInstance.collection("users").add({
@@ -48,5 +50,9 @@ class UserProvider {
     } on FirebaseException catch (e) {
       throw Exception("Unable to upload photo");
     }
+  }
+
+  signOut() {
+    _authInstance.signOut();
   }
 }

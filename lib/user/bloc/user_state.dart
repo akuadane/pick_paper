@@ -13,3 +13,5 @@ class SigningIn extends UserState {}
 class SignedOut extends UserState {}
 
 class SignInError extends UserState {}
+
+class UploadingPhotoError extends UserState {}

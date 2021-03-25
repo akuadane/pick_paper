@@ -18,23 +18,29 @@ class CreateUser extends UserEvent {
 }
 
 class GetUser extends UserEvent {
-  final String userDocId;
+  final String uid;
 
-  GetUser(this.userDocId);
+  GetUser(this.uid);
 }
 
 class UpdateUser extends UserEvent {
   final Map<String, dynamic> tobeUpdated;
   final String userDocId;
+  final String uid;
 
-  UpdateUser({@required this.tobeUpdated, @required this.userDocId});
+  UpdateUser(
+      {@required this.tobeUpdated,
+      @required this.userDocId,
+      @required this.uid});
 }
 
 class UploadProfilePicture extends UserEvent {
   final File image;
   final String userDocId;
+  final String uid;
 
-  UploadProfilePicture({@required this.image, @required this.userDocId});
+  UploadProfilePicture(
+      {@required this.image, @required this.userDocId, @required this.uid});
 }
 
 class SignOut extends UserEvent {}

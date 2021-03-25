@@ -23,4 +23,8 @@ class UserRepository {
   Future<String> uploadProfilePicture(File image, String userDocId) {
     this.userProvider.uploadProfilePicture(image, userDocId);
   }
+
+  void signOut() {
+    this.userProvider.signOut();
+  }
 }
